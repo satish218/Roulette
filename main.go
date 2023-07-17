@@ -79,6 +79,10 @@ func draw(bankroll, betAmount float64) {
 	}
 }
 
+func highLow(bankroll, betAmount float64) {
+	fmt.Println("in high low")
+}
+
 func main() {
 
 	var bankroll float64  //user total bet amount
@@ -106,5 +110,6 @@ func main() {
 	case 3:
 		draw(bankroll, betAmount)
 	}
+	highLow(bankroll, betAmount)
 
 }
