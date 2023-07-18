@@ -79,37 +79,82 @@ func draw(bankroll, betAmount float64) {
 	}
 }
 
+// func to pick high or low
 func highLow(bankroll, betAmount float64) {
-	fmt.Println("in high low")
+	var userChoice string
+	var drawChoicerand int
+	var drawChoice string
+	fmt.Println("Pick your choice Low(0-17) or High(18-36)")
+	fmt.Scanln(&userChoice)
+	drawChoicerand = rand.Intn(2)
+	if drawChoicerand == 0 {
+		drawChoice = "Low"
+	} else {
+		drawChoice = "High"
+	}
+	if userChoice == drawChoice {
+		bankroll = bankroll + betAmount
+		fmt.Println("congragulations you won!")
+	} else {
+		bankroll = bankroll - betAmount
+		fmt.Println("Sorry Try again")
+	}
+
 }
 
-func main() {
-
-	var bankroll float64  //user total bet amount
-	var betAmount float64 //user bet amount for one bet
-	var betType int       //user bet type
-
-	fmt.Println("Please enter your Bankroll: ")
-	fmt.Scanln(&bankroll)
-	fmt.Println("Please enter your bet amount for the current roll")
-	fmt.Scanln(&betAmount)
-	if bankroll < betAmount {
-		fmt.Println("Your Bet Amount is more than bankroll. Pleaes check and try again")
-		fmt.Println(bankroll)
-	} else {
-		fmt.Println("Please choose your bet Type from below options")
-		fmt.Println("1. red/black\n2. odd/even\n3. pick Num")
-		fmt.Scanln(&betType)
-		bankroll = bankroll - betAmount
+func checkBetAmount(bankroll, betAmount float64) {
+	for betAmount < 1 {
+		fmt.Println("Minimum bet amount is $1. Try again")
+		fmt.Scanln(&betAmount)
 	}
-	switch betType {
+	for bankroll < betAmount {
+		fmt.Println("Your Bet Amount(", betAmount, ") is more than bankroll(", bankroll, "). Pleaes check and try again")
+		fmt.Scanln(&betAmount)
+	}
+}
+
+func checkBetType() int {
+	var betTypeNum int = -1
+	for betTypeNum < 0 || betTypeNum > 5 {
+		fmt.Println("Please choose your bet Type from below options")
+		fmt.Println("1. red/black\n2. odd/even\n3. pick Num\n4. Low/High")
+		fmt.Scanln(&betTypeNum)
+	}
+	return betTypeNum
+}
+
+// func to choose bet type
+func betType(bankroll, betAmount float64) {
+	checkBetAmount(bankroll, betAmount)
+	var betTypeNum int = checkBetType()
+	bankroll = bankroll - betAmount
+	fmt.Println(bankroll)
+	switch betTypeNum {
 	case 1:
 		redBlack(bankroll, betAmount)
 	case 2:
 		evenOdd(bankroll, betAmount)
 	case 3:
 		draw(bankroll, betAmount)
+	case 4:
+		highLow(bankroll, betAmount)
+	default:
+		fmt.Println("please choose correct bet type number from above")
 	}
-	highLow(bankroll, betAmount)
+}
 
+func main() {
+
+	var bankroll float64  //user total bet amount
+	var betAmount float64 //user bet amount for one bet
+
+	fmt.Println("Please enter your Bankroll: ")
+	fmt.Scanln(&bankroll)
+	for bankroll < 1 {
+		fmt.Println("Amount should be greater than $1. Please try again with appropriate amount")
+		fmt.Scanln(&bankroll)
+	}
+	fmt.Println("Please enter your bet amount for the current roll")
+	fmt.Scanln(&betAmount)
+	betType(bankroll, betAmount)
 }
